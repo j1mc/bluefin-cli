@@ -1,8 +1,8 @@
 # Bluefin CLI roadmap
 
-**Last updated:** 2026-08-22
+**Last updated:** 2026-10-10
 
-**Current release line:** v0.10.x
+**Current release line:** v0.11.x (v0.11.8 current; v0.10.x in maintenance)
 
 **Planning issue:** [#196](https://github.com/tuna-os/bluefin-cli/issues/196)
 
@@ -20,42 +20,49 @@ The project currently ships:
 - portable setup profiles and a cross-platform Brewfile workflow;
 - self-update and diagnostics;
 - release assets for Linux, macOS, and Windows, including deb and rpm packages;
-- CI across Linux, macOS, and Windows, plus scheduled Windows validation.
+- CI across Linux, macOS, and Windows, plus scheduled Windows validation;
+- v0.11.x: ash/nushell shell support, Alpine backend refactoring, runner prompt parity fixes.
 
-The release pipeline and direct-download path are operational. Package-manager
-availability is incomplete and remains the clearest adoption gap.
+The release pipeline and direct-download path are operational. **Package-manager
+distribution is partially broken** (see near-term section): Homebrew formula publisher is
+wired but token-gated; every release since v0.10.6 has silently skipped the tap upload.
 
-## Near term: make distribution dependable
+## Near term: fix distribution (Q4 2026 critical path)
 
 **Outcome:** every installation path shown as available in the README installs
 the current release, and unavailable paths are clearly marked.
 
-- Publish and verify the Homebrew formula in `tuna-os/homebrew-tap`.
-- Publish and verify the Scoop manifest in `tuna-os/scoop-bucket`.
-- Bring Winget to the current release line and validate its update loop.
-- Decide whether Chocolatey and AUR are supported commitments; either publish
+**BLOCKED:** Homebrew formula publication silently failed on 13 consecutive releases (v0.10.6 through v0.11.3+) due to missing `HOMEBREW_TAP_TOKEN` secret (issue #295). This is a provisioning gap, not a code defect. A maintainer must create a credential and set it as a repository secret before any release will publish the formula.
+
+- [ ] **URGENT (maintainer decision):** Provision `HOMEBREW_TAP_TOKEN` → test release → confirm `Formula/bluefin-cli.rb` lands in tap (related: tuna-os/homebrew-tap issues)
+- [ ] Publish and verify the Scoop manifest in `tuna-os/scoop-bucket` (same token provisioning path).
+- [ ] Bring Winget to the current release line and validate its update loop.
+- [ ] Decide whether Chocolatey and AUR are supported commitments; either publish
   and verify them or keep them explicitly out of the supported matrix.
-- Add a lightweight post-release check that records which channels received the
+- [ ] Add a lightweight post-release check that records which channels received the
   release and makes partial publication visible.
 
 **Exit evidence:** a release checklist links to successful installs or package
-records for every supported channel, with no stale version claims in the README.
+records for every supported channel, with no stale version claims in the README. v0.11.4+ has been published to all planned channels.
 
-## Next: define the v1 readiness gate
+## Next: define and gate the v1.0 release (Q4/early Q1 2027)
 
 **Outcome:** maintainers and users share a concrete definition of a stable
-Bluefin CLI release.
+Bluefin CLI release, and a release candidate passes all gates.
 
-- Document supported operating systems, architectures, shells, installation
+**Depends on:** near-term distribution fixes landing first (issue #295 resolution).
+
+- [ ] Document supported operating systems, architectures, shells, installation
   methods, and compatibility expectations.
-- Define configuration and profile compatibility guarantees, including how
+- [ ] Define configuration and profile compatibility guarantees, including how
   breaking changes and migrations are communicated.
-- Set release-health expectations: required CI checks, rollback or hotfix
+- [ ] Set release-health expectations: required CI checks, rollback or hotfix
   ownership, and the maximum acceptable lag across supported package channels.
-- Resolve or explicitly defer known platform gaps before declaring v1.0.
+- [ ] Resolve or explicitly defer known platform gaps before declaring v1.0.
+- [ ] Create a v1.0 release checklist issue tracking all gates (see related: issue #223).
 
-**Exit evidence:** a published v1 checklist is complete, the support matrix is
-current, and at least one release candidate passes all supported-platform and
+**Exit evidence:** a published v1.0-checklist issue is 100% complete, the support matrix is
+current, and at least one release candidate (v0.12.0-rc.1 or v1.0-rc.1) passes all supported-platform and
 distribution checks.
 
 ## Then: prove adoption and contributor sustainability
