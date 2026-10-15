@@ -9,16 +9,16 @@ require (
 	charm.land/huh/v2 v2.0.3
 	charm.land/lipgloss/v2 v2.0.6
 	github.com/catppuccin/go v0.3.0
-	github.com/charmbracelet/x/exp/teatest/v2 v2.0.0-20261008172826-faa4adf95555
+	github.com/charmbracelet/x/exp/teatest/v2 v2.0.0-20261012121918-43427fdbad12
 	github.com/charmbracelet/x/term v0.2.2
 	github.com/lucasb-eyer/go-colorful v1.4.1
 	github.com/minio/selfupdate v0.6.0
 	github.com/sixdouglas/suncalc v0.0.0-20250114185126-291b1938b70c
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
-	golang.org/x/image v0.46.0
+	golang.org/x/image v0.47.0
 	golang.org/x/mod v0.41.0
-	golang.org/x/sys v0.48.0
+	golang.org/x/sys v0.49.0
 )
 
 require (
@@ -61,6 +61,6 @@ require (
 	github.com/xo/terminfo v1.0.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.55.0 // indirect
-	golang.org/x/sync v0.23.0 // indirect
-	golang.org/x/text v0.42.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 )
