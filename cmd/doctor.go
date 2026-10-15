@@ -66,31 +66,3 @@ func doctorReport() (string, int) {
 	report := doctor.Diagnose(defaultDoctorOptions())
 	return report.Render(), report.Failures
 }
-
-type checkResult struct {
-	ok   bool
-	warn bool
-	name string
-	note string
-}
-
-func fromDoctorResult(r doctor.CheckResult) checkResult {
-	return checkResult{
-		ok:   r.OK,
-		warn: r.Warn,
-		name: r.Name,
-		note: r.Note,
-	}
-}
-
-func checkBrew() checkResult { return fromDoctorResult(doctor.CheckBrew(defaultDoctorOptions())) }
-func checkShellIntegration() checkResult {
-	return fromDoctorResult(doctor.CheckShellIntegration(defaultDoctorOptions()))
-}
-func checkTools() checkResult   { return fromDoctorResult(doctor.CheckTools(defaultDoctorOptions())) }
-func checkNetwork() checkResult { return fromDoctorResult(doctor.CheckNetwork(defaultDoctorOptions())) }
-func checkSelfUpdate() checkResult {
-	return fromDoctorResult(doctor.CheckSelfUpdate(defaultDoctorOptions()))
-}
-func checkVersion() checkResult     { return fromDoctorResult(doctor.CheckVersion(defaultDoctorOptions())) }
-func commandExists(bin string) bool { return doctor.CommandExists(defaultDoctorOptions(), bin) }
