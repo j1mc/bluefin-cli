@@ -43,9 +43,9 @@ type RunnerIO struct {
 }
 
 // DelegateToWindowsCLI re-execs the Windows build of this CLI (located by
-// FindWindowsCLI) with args, wiring streams's streams straight through. It
-// returns an error describing how to install the Windows build if no
-// Windows executable can be found, and the exec error otherwise.
+// FindWindowsCLI) with args, wiring the given streams straight through. If
+// no Windows executable can be found it reports install guidance through r
+// and returns nil; otherwise it returns the exec error, if any.
 func DelegateToWindowsCLI(args []string, streams RunnerIO, r Reporter) error {
 	if r == nil {
 		r = PrintReporter{}
