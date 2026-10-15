@@ -21,14 +21,14 @@ This runs six checks ([`cmd/doctor.go`](../cmd/doctor.go)) and prints `✓`
 Two useful flags:
 
 ```bash
-bluefin-cli doctor --fix     # applies safe automatic fixes (installs missing tools)
+bluefin-cli doctor --fix     # applies safe automatic fixes (shell integration, missing tools)
 bluefin-cli doctor --bench   # measures shell startup cost vs. a bare shell (bash/zsh/fish only)
 ```
 
-`--fix` covers two cases: it sets up `coldbrew` on Alpine/musl systems, and
-it installs `eza`, `fzf`, and `starship` when any of them are absent. It does
-not fix shell-integration or network issues — those need the manual steps
-above.
+`--fix` covers three cases: it enables shell integration for your current
+shell if it is off, it sets up `coldbrew` on Alpine/musl systems, and it
+installs `eza`, `fzf`, and `starship` when any of them are absent. It does
+not fix network or Homebrew PATH issues — those need the manual steps above.
 
 ## Common issues
 
@@ -48,7 +48,7 @@ Add that line to your shell's rc file to make it permanent, or re-run
 ### No package manager on Alpine / postmarketOS
 
 Homebrew's Ruby bootstrap does not run on musl libc, so `bluefin-cli` uses
-[`coldbrew`](https://github.com/coldbrewcli/coldbrew) instead on Alpine-based
+`coldbrew` instead on Alpine-based
 systems. If `doctor` reports coldbrew is "not set up yet", run:
 
 ```bash
