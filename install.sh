@@ -53,21 +53,35 @@ trap 'rm -rf "$tmp"' EXIT
 echo "Downloading $BINARY $tag ($os/$arch)..."
 curl -fsSL "$url" -o "$tmp/bluefin-cli.tar.gz"
 
-if curl -fsSL "$checksum_url" -o "$tmp/checksums.txt" 2>/dev/null; then
-  expected_sha=$(grep "  ${archive}$" "$tmp/checksums.txt" | awk '{print $1}')
-  if [ -n "$expected_sha" ]; then
-    if command -v sha256sum >/dev/null 2>&1; then
-      actual_sha=$(sha256sum "$tmp/bluefin-cli.tar.gz" | awk '{print $1}')
-    elif command -v shasum >/dev/null 2>&1; then
-      actual_sha=$(shasum -a 256 "$tmp/bluefin-cli.tar.gz" | awk '{print $1}')
-    else
-      actual_sha=""
-    fi
-    if [ -n "$actual_sha" ] && [ "$actual_sha" != "$expected_sha" ]; then
-      echo "error: checksum verification failed for $archive" >&2
-      exit 1
-    fi
-  fi
+curl -fsSL "$checksum_url" -o "$tmp/checksums.txt" || {
+  echo "error: could not download checksums for $archive" >&2
+  exit 1
+}
+
+expected_sha=$(awk -v archive="$archive" '$2 == archive { print $1; exit }' "$tmp/checksums.txt")
+if [ "${#expected_sha}" -ne 64 ]; then
+  echo "error: checksums.txt has no valid SHA-256 entry for $archive" >&2
+  exit 1
+fi
+case "$expected_sha" in
+  *[!0-9A-Fa-f]*)
+    echo "error: checksums.txt has no valid SHA-256 entry for $archive" >&2
+    exit 1
+    ;;
+esac
+
+if command -v sha256sum >/dev/null 2>&1; then
+  actual_sha=$(sha256sum "$tmp/bluefin-cli.tar.gz" | awk '{print $1}')
+elif command -v shasum >/dev/null 2>&1; then
+  actual_sha=$(shasum -a 256 "$tmp/bluefin-cli.tar.gz" | awk '{print $1}')
+else
+  echo "error: sha256sum or shasum is required to verify $archive" >&2
+  exit 1
+fi
+
+if [ "$actual_sha" != "$expected_sha" ]; then
+  echo "error: checksum verification failed for $archive" >&2
+  exit 1
 fi
 
 tar -xzf "$tmp/bluefin-cli.tar.gz" -C "$tmp"
