@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"sort"
 	"strings"
-	"sync"
 
 	"time"
 
@@ -19,7 +18,6 @@ import (
 	"github.com/tuna-os/bluefin-cli/internal/env"
 	"github.com/tuna-os/bluefin-cli/internal/install"
 	"github.com/tuna-os/bluefin-cli/internal/shell"
-	"github.com/tuna-os/bluefin-cli/internal/status"
 	"github.com/tuna-os/bluefin-cli/internal/tui"
 	"github.com/tuna-os/bluefin-cli/internal/tui/app"
 	"github.com/tuna-os/bluefin-cli/internal/update"
@@ -29,7 +27,6 @@ var menuCmd = &cobra.Command{
 	Use:   "menu",
 	Short: "Open the interactive Bluefin main menu",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		registerPaletteActions()
 		return app.Run(mainMenuScreen(), checkForUpdate)
 	},
 }
@@ -63,7 +60,6 @@ func checkForUpdate() tea.Msg {
 // by commands like `bluefin-cli fonts` so every interactive path shares the
 // native TUI (esc leads back to the Home menu).
 func launchFlow(flow tea.Cmd) error {
-	registerPaletteActions()
 	return app.Run(mainMenuScreen(), flow, checkForUpdate)
 }
 
@@ -101,9 +97,7 @@ func mainMenuItems() []app.MenuItem {
 func mainMenuSelect(it app.MenuItem) tea.Cmd {
 	switch it.Value {
 	case "status":
-		return app.Push(app.NewText("Status", func(width int) (string, error) {
-			return status.Render(width, reportedVersion())
-		}))
+		return statusScreenCmd()
 	case "doctor":
 		return doctorScreenCmd()
 	case "shell":
@@ -567,50 +561,5 @@ func confirmChangesScreen(toInstall, toRemove []install.Package) app.Screen {
 			applyPackageChanges(toInstall, toRemove)
 			return nil
 		}))
-	})
-}
-
-var paletteOnce sync.Once
-
-// registerPaletteActions exposes every menu destination to the ctrl+p
-// command palette.
-func registerPaletteActions() {
-	paletteOnce.Do(func() {
-		app.Register(app.Action{
-			ID: "status", Icon: "📊", Label: "Show Status", Section: "Home",
-			Do: func() tea.Cmd { return mainMenuSelect(app.MenuItem{Value: "status"}) },
-		})
-		app.Register(app.Action{
-			ID: "dino", Icon: "🦕", Label: "Dino Run", Section: "Fun",
-			Do: func() tea.Cmd { return app.Push(gameScreen()) },
-		})
-		app.Register(app.Action{
-			ID: "doctor", Icon: "🩺", Label: "Doctor", Section: "Home",
-			Do: func() tea.Cmd { return doctorScreenCmd() },
-		})
-		app.Register(app.Action{
-			ID: "terminal", Icon: "👻", Label: "Terminal Setup", Section: "Home",
-			Do: func() tea.Cmd { return app.Push(terminalMenuScreen()) },
-		})
-		app.Register(app.Action{
-			ID: "update", Icon: "⬆", Label: "Check for Updates", Section: "Home",
-			Do: func() tea.Cmd {
-				return app.Push(app.NewRunner("Update", func() error { return runUpdate(false) }))
-			},
-		})
-		for _, cat := range availableBundleCategories() {
-			id, label := cat.ID, cat.Label
-			app.Register(app.Action{
-				ID: "install-" + id, Label: label, Section: "Install",
-				Do: func() tea.Cmd { return packagesFlow(id, label) },
-			})
-		}
-		for _, it := range extraMenuItems() {
-			it := it
-			app.Register(app.Action{
-				ID: it.Value, Icon: it.Icon, Label: it.Label, Section: "Customize",
-				Do: func() tea.Cmd { return extraMenuDo(it.Value) },
-			})
-		}
 	})
 }

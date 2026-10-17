@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 	"github.com/tuna-os/bluefin-cli/internal/status"
+	"github.com/tuna-os/bluefin-cli/internal/tui/app"
 )
 
 var statusCmd = &cobra.Command{
@@ -16,4 +18,14 @@ var statusCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(statusCmd)
+	app.Register(app.Action{
+		ID: "status", Icon: "📊", Label: "Show Status", Section: "Home",
+		Do: statusScreenCmd,
+	})
+}
+
+func statusScreenCmd() tea.Cmd {
+	return app.Push(app.NewText("Status", func(width int) (string, error) {
+		return status.Render(width, reportedVersion())
+	}))
 }

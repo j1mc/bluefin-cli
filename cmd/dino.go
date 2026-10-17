@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 	"github.com/tuna-os/bluefin-cli/internal/tui/app"
 )
@@ -17,4 +18,8 @@ var dinoCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(dinoCmd)
+	app.Register(app.Action{
+		ID: "dino", Icon: "🦕", Label: "Dino Run", Section: "Fun",
+		Do: func() tea.Cmd { return app.Push(gameScreen()) },
+	})
 }

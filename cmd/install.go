@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 	"github.com/tuna-os/bluefin-cli/internal/env"
 	"github.com/tuna-os/bluefin-cli/internal/install"
@@ -54,6 +55,13 @@ func init() {
 	installWallpapersCmd.Flags().Bool("non-interactive", false, "Skip prompts and use flag values")
 	installWallpapersCmd.Flags().Bool("yes", false, "Non-interactive shortcut: run sunset setup after install")
 	installWallpapersCleanupCmd.Flags().Bool("all", false, "Also uninstall known wallpaper casks and remove local wallpaper folders")
+	for _, cat := range availableBundleCategories() {
+		id, label := cat.ID, cat.Label
+		app.Register(app.Action{
+			ID: "install-" + id, Label: label, Section: "Install",
+			Do: func() tea.Cmd { return packagesFlow(id, label) },
+		})
+	}
 }
 
 var installWallpapersCmd = &cobra.Command{

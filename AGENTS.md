@@ -34,8 +34,8 @@ The repository produces two binaries from the same source:
   tree and the manifest disagree -- so do not hand-edit an embedded resource.
 - `internal/tui/app/` implements the persistent screen stack, shared header and
   footer, command palette, and runners for external or streaming operations.
-  Menus and actions are registered from `cmd/menu.go` and related `cmd/menu_*`
-  files.
+  Each command or menu module registers its own palette actions; `cmd/menu.go`
+  composes navigation but does not own the registry.
 - `internal/config/`, `internal/profile/`, and `internal/update/` own persisted
   configuration, portable profiles, and checksum-verified self-update.
 - `docs/commands/` holds the generated command reference. Regenerate it with
