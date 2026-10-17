@@ -55,7 +55,8 @@ graph TD
 
 The `ctrl+p` palette lists every leaf destination above (Status, each install
 category, Wallpapers, Fonts, Starship, Sunset) — one fuzzy search reaches
-anything in the tree.
+anything in the tree. Each command or menu module registers its own palette
+action; `cmd/menu.go` only composes the navigation tree.
 
 ## How this is tested
 

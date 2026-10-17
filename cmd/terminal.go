@@ -44,6 +44,10 @@ var terminalSetupCmd = &cobra.Command{
 func init() {
 	terminalCmd.AddCommand(terminalSetupCmd)
 	rootCmd.AddCommand(terminalCmd)
+	app.Register(app.Action{
+		ID: "terminal", Icon: "👻", Label: "Terminal Setup", Section: "Home",
+		Do: func() tea.Cmd { return app.Push(terminalMenuScreen()) },
+	})
 }
 
 // macOSAutoAppearance reads whether macOS switches light/dark automatically.

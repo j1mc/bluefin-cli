@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/tuna-os/bluefin-cli/internal/doctor"
+	"github.com/tuna-os/bluefin-cli/internal/tui/app"
 )
 
 var doctorCmd = &cobra.Command{
@@ -30,6 +31,10 @@ func init() {
 	doctorCmd.Flags().Bool("fix", false, "Apply safe automatic fixes before reporting")
 	doctorCmd.Flags().Bool("bench", false, "Benchmark interactive shell startup vs a bare shell")
 	rootCmd.AddCommand(doctorCmd)
+	app.Register(app.Action{
+		ID: "doctor", Icon: "🩺", Label: "Doctor", Section: "Home",
+		Do: doctorScreenCmd,
+	})
 }
 
 func defaultDoctorOptions() doctor.Options {

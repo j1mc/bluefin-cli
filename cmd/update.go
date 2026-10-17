@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 	"github.com/tuna-os/bluefin-cli/internal/tui"
+	"github.com/tuna-os/bluefin-cli/internal/tui/app"
 	"github.com/tuna-os/bluefin-cli/internal/update"
 )
 
@@ -64,4 +66,10 @@ func runUpdate(checkOnly bool) error {
 func init() {
 	updateCmd.Flags().Bool("check", false, "Only check whether an update is available")
 	rootCmd.AddCommand(updateCmd)
+	app.Register(app.Action{
+		ID: "update", Icon: "⬆", Label: "Check for Updates", Section: "Home",
+		Do: func() tea.Cmd {
+			return app.Push(app.NewRunner("Update", func() error { return runUpdate(false) }))
+		},
+	})
 }
