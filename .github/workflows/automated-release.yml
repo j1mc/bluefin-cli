@@ -44,7 +44,7 @@ jobs:
                          @semantic-release/exec
 
       - name: Install GoReleaser
-        uses: goreleaser/goreleaser-action@72f1b462a0b1a00b6b89b5a0a5b0a5b0a5b0a5b0 # v7
+        uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7
         with:
           install-only: true
 

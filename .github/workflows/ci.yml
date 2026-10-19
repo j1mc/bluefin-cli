@@ -59,7 +59,7 @@ jobs:
       run: go test ${{ matrix.tags && format('-tags {0}', matrix.tags) || '' }} -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       
     - name: Upload coverage
-      uses: codecov/codecov-action@8365a7f3f5a1f1ed1b5ba307e9f29b1a3e8d3b3a # v7
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
       with:
         files: ./coverage.txt
         flags: ${{ matrix.variant }}
@@ -464,7 +464,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Install GoReleaser
-      uses: goreleaser/goreleaser-action@72f1b462a0b1a00b6b89b5a0a5b0a5b0a5b0a5b0 # v7
+      uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7
       with:
         version: '~> v2'
         install-only: true
