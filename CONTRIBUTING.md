@@ -49,8 +49,8 @@ just test
 ```
 
 If a change affects commands or flags, regenerate the command reference from the
-extra build so the generated pages cover both published binaries, then include
-the new Markdown in your PR:
+extra build. The extra build includes both published binaries. Include the new
+Markdown in your PR:
 
 ```bash
 go build -tags extra -o bluefin-cli .
