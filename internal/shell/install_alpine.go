@@ -19,18 +19,18 @@ func EnsureColdbrew() bool {
 	if _, err := exec.LookPath("apk"); err != nil {
 		return false
 	}
-	fmt.Println(infoStyle.Render("⬇️  Setting up coldbrew (rootless package manager)..."))
+	printInfo("⬇️  Setting up coldbrew (rootless package manager)...")
 	cmd := exec.Command("sudo", "apk", "add", "coldbrew")
 	cmd.Stdin = nil
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	if err := cmd.Run(); err != nil {
-		fmt.Println(errorStyle.Render("Could not set up coldbrew: " + err.Error()))
+		printError("Could not set up coldbrew: " + err.Error())
 		return false
 	}
 	if _, err := exec.LookPath("coldbrew"); err != nil {
 		return false
 	}
-	fmt.Println(successStyle.Render("✓ coldbrew ready"))
+	printSuccess("✓ coldbrew ready")
 	return true
 }
 
@@ -53,7 +53,7 @@ func alpinePackageManager() string {
 func installToolsAlpine(tools []Tool, cfg *Config) {
 	mgr := alpinePackageManager()
 	if mgr == "" {
-		fmt.Println(errorStyle.Render("Skipping tool installation: neither coldbrew nor apk found"))
+		printError("Skipping tool installation: neither coldbrew nor apk found")
 		return
 	}
 	for _, tool := range tools {
@@ -64,12 +64,12 @@ func installToolsAlpine(tools []Tool, cfg *Config) {
 			continue
 		}
 		pkg := tool.GetApkPkg()
-		fmt.Println(infoStyle.Render(fmt.Sprintf("⬇️  Installing %s via %s...", pkg, mgr)))
+		printInfo("⬇️  Installing %s via %s...", pkg, mgr)
 		if err := installAlpinePkg(mgr, pkg); err != nil {
-			fmt.Println(errorStyle.Render(fmt.Sprintf("Warning: Failed to install %s: %v", pkg, err)))
+			printError("Warning: Failed to install %s: %v", pkg, err)
 			continue
 		}
-		fmt.Println(successStyle.Render(fmt.Sprintf("✓ %s installed successfully!", pkg)))
+		printSuccess("✓ %s installed successfully!", pkg)
 	}
 }
 

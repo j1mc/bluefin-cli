@@ -57,7 +57,7 @@ func UninstallSetup(opts UninstallOptions) error {
 		return fmt.Errorf("%s", strings.Join(failures, "; "))
 	}
 
-	fmt.Println(successStyle.Render("✓ Bluefin shell setup uninstalled"))
+	printSuccess("✓ Bluefin shell setup uninstalled")
 	return nil
 }
 
@@ -67,7 +67,7 @@ func uninstallManagedSoftware() error {
 	}
 
 	if _, err := exec.LookPath("brew"); err != nil {
-		fmt.Println(infoStyle.Render("Homebrew not found; skipping managed package uninstall."))
+		printInfo("Homebrew not found; skipping managed package uninstall.")
 		return nil
 	}
 
@@ -84,7 +84,7 @@ func uninstallManagedSoftware() error {
 
 func uninstallManagedWindowsSoftware() error {
 	if _, err := exec.LookPath("winget"); err != nil {
-		fmt.Println(infoStyle.Render("winget not found; skipping managed package uninstall."))
+		printInfo("winget not found; skipping managed package uninstall.")
 		return nil
 	}
 

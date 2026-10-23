@@ -66,15 +66,15 @@ func togglePowerShell(enable bool) error {
 
 	if enable {
 		if changedAny {
-			fmt.Println(successStyle.Render("✓ Enabled shell experience for powershell"))
+			printSuccess("✓ Enabled shell experience for powershell")
 		} else {
-			fmt.Println(infoStyle.Render("powershell is already enabled for powershell"))
+			printInfo("powershell is already enabled for powershell")
 		}
 	} else {
 		if changedAny {
-			fmt.Println(successStyle.Render("✓ Disabled shell experience for powershell"))
+			printSuccess("✓ Disabled shell experience for powershell")
 		} else {
-			fmt.Println(infoStyle.Render("powershell is already disabled for powershell"))
+			printInfo("powershell is already disabled for powershell")
 		}
 	}
 
